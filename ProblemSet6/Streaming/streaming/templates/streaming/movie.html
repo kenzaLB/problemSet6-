@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    {% load static %}
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #0a0808;
+            
+        }
+        h1 {
+            color: #810551;
+            font-size: 2em;
+            margin-top: 50px;
+            margin-bottom: 30px;
+            text-align: center;
+            text-shadow: 2px 2px #000;
+        }
+        p {
+            margin-bottom: 10px;
+            color : white
+        }
+        img {
+            height: 20px;
+            margin-right: 5px;
+        }
+        a {
+            color: #810551;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+    
+</head>
+<body>
+    <h1>{{ movie.title }}</h1>
+    {% for review in movie.reviews.all %}
+    <p>
+        <img src="{% static 'streaming/' %}{{review.rating}}.png" alt="{{ review.rating }} star rating"> 
+        <em><a href="{% url 'user_reviews' review.user.user.id %}">{{ review.user.user }}</a></em>: {{ review.comment }}
+    </p>
+    {% endfor %}
+
+    <a href="{% url 'index' %}">Back</a>
+</body>
+</html>

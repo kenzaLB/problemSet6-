@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Subscription Plan</title>
+    <style>
+        body {
+            background-color: black;
+            font-family: Arial, sans-serif;
+            font-size: 16px;
+            color: aliceblue;
+        }
+        h1{
+            text-align: center;
+            color: #981050;
+            margin-bottom: 100px;
+            font-size: 50px;
+        }
+
+        h2{
+            color: #fff;
+            text-align: center;
+
+            font-size: 35px;
+        }
+
+        h3{
+            color: #fff;
+            text-align: center;
+
+        }
+     
+        a {
+            display: block;
+            background-color: #810551;
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            margin-top: 20px;
+            margin-right: 200px;
+            margin-left: 200px;
+            transition: all 0.3s ease;
+        }
+       
+    </style>
+</head>
+<body>
+    <h1> Subscription Plan: {{ subscription_plan.name }}</h1>
+    <h2>Movies Available</h2>
+    {% for movie in movies %}
+    <a href="{% url 'movie' movie.id %}">
+        <h3>{{ movie.title }}</h3>
+    </a>
+    {% endfor %}
+    <a href="{% url 'index' %}">Back</a>
+</body>
+</html>

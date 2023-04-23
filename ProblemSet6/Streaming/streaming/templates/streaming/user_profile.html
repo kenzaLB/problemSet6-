@@ -1,0 +1,98 @@
+{% extends 'streaming/base.html' %}
+
+{% block content %}
+  <div class="profile-container">
+    <h1>Bienvenue {{ request.user.username }}!</h1>
+    <div class="subscription-plan">
+      <p class="title">Subscription plan :</p>
+      <p class="plan-name">{{ subscription_plan.name }}</p>
+    </div>
+    <div class="movies-container">
+      <p class="title">Available movies :</p>
+      <ul class="movies-list">
+        {% for movie in available_movies %}
+          <a href="{% url 'movie' movie.id %}">{{ movie.title }}</a>
+          <br>
+          <br><
+        {% empty %}
+          <li>No movies available..</li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+
+  <style>
+    body {
+      background-color: black;
+      font-family: Arial, sans-serif;
+      font-size: 18px;
+      
+    }
+     a {
+      text-decoration: none;
+      color: white;
+      font-size: 15px;
+      font-weight: bold;
+      text-align: center;
+      margin-bottom: 20px;
+
+      padding: 10px;
+      margin: 0;
+      background-color: #a5427f;
+      border-radius: 10px;
+    transition: all 0.3s ease;
+}
+
+    .profile-container {
+      max-width: 800px;
+      margin: 50px auto;
+      padding: 20px;
+      background-color: #fff;
+      box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+      border-radius: 10px;
+    }
+
+    h1 {
+      text-align: center;
+      color: #810551;
+      margin-bottom: 30px;
+    }
+
+    .subscription-plan {
+      margin-bottom: 30px;
+    }
+
+    .title {
+      font-size: 1.5em;
+      color: #810551;
+      margin-bottom: 10px;
+    }
+
+    .plan-name {
+      font-size: 1.2em;
+      color: #555;
+    }
+
+    .movies-container {
+      margin-bottom: 30px;
+    }
+
+    h2 {
+      font-size: 1.5em;
+      color: #810551;
+      margin-bottom: 10px;
+    }
+
+    .movies-list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    li {
+      font-size: 1.2em;
+      color: #555;
+      margin-bottom: 10px;
+    }
+  </style>
+{% endblock %}

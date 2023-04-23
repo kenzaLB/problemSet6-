@@ -1,0 +1,35 @@
+{% extends 'streaming/base.html' %}
+
+{% block content %}
+  <h1>Connexion</h1>
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Log In</button>
+  </form>
+
+  <style>
+    body{
+      background-color: #000;
+    }
+    form {
+      margin: 0 auto;
+      width: 50%;
+      background-color: #981050;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 3em;
+      font-family: Arial, sans-serif;
+      color: #981050;
+      text-shadow: 2px 2px #000;
+    }
+    label{
+      color: white;
+    }
+  </style>
+{% endblock %}

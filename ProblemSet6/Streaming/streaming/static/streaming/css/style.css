@@ -1,0 +1,36 @@
+body{  
+  /*les couleurs que j'aime : #810551  #05454d*/
+  background: black
+}  
+h1 {
+  text-align: center;
+  font-size: 3em;
+  font-family: Arial, sans-serif;
+  color: #981050;
+  text-shadow: 2px 2px #000;
+}
+img {
+  height: 20px;
+}
+a {
+  text-decoration: none;
+  color: white;
+  font-size: 15px;
+  font-weight: bold;
+  text-align: center;
+  padding: 10px;
+  margin: 0;
+  background-color: #a5427f;
+  border-radius: 10px;
+  transition: all 0.3s ease;
+}
+
+.average-rating {
+  color: white;
+}
+p{
+  color :white
+}
+
+
+
