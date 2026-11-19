@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><title>TPRM Platform · Data upload prototype</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<style>
+:root{--g:#00915A;--dg:#1F3D2E;--lg:#EDF1EF;--gr:#2B2F33;--mu:#6B7580;--ln:#E2E6EA;--rd:#B42318;--am:#B4540A;--bg:#F3F5F4}
+*{box-sizing:border-box}body{margin:0;font:13px/1.45 Arial,Helvetica,sans-serif;color:var(--gr);background:var(--bg)}
+header{background:#fff;border-bottom:1px solid var(--ln);display:flex;align-items:center;gap:18px;padding:0 20px;height:52px;position:sticky;top:0;z-index:5}
+.logo{display:flex;align-items:center;gap:8px;font-weight:700;color:var(--dg);font-size:12px}.logo i{width:18px;height:18px;background:var(--g);display:inline-block}
+.app{font-weight:700;font-size:15px;margin-right:12px}
+nav.main{display:flex;gap:4px;flex:1;overflow-x:auto}nav.main span{padding:6px 10px;border-radius:4px;color:#4A5560;white-space:nowrap}nav.main span.on{background:#E3F2EA;color:var(--dg);font-weight:700}
+.role{background:var(--dg);color:#fff;font-size:11px;font-weight:700;padding:4px 10px;border-radius:12px;white-space:nowrap}
+.sub{display:flex;gap:26px;padding:0 24px;background:var(--bg)}.sub a{padding:12px 0 8px;color:#4A5560;cursor:pointer;border-bottom:3px solid transparent}.sub a.on{color:var(--g);font-weight:700;border-color:var(--g)}
+main{padding:12px 24px 40px;max-width:1600px}
+h1{font-size:21px;margin:6px 0 2px}.lead{color:var(--mu);margin:0 0 14px}
+.card{background:#fff;border:1px solid var(--ln);border-radius:4px;padding:16px}
+table{width:100%;border-collapse:collapse}th{background:var(--lg);color:var(--dg);text-align:left;font-size:12px;padding:8px}td{padding:8px;border-bottom:1px solid var(--ln);vertical-align:middle}
+.btn{border:1px solid #9AA5A0;background:#fff;color:var(--gr);padding:7px 14px;border-radius:3px;cursor:pointer;font:inherit}.btn:hover{border-color:var(--g)}
+.btn.p{background:var(--g);border-color:var(--g);color:#fff;font-weight:700}.btn.p:disabled{opacity:.45;cursor:not-allowed}
+.btn.s{padding:4px 9px;font-size:12px}.lnk{color:var(--g);cursor:pointer;background:none;border:0;font:inherit;padding:0 6px 0 0;text-decoration:underline}
+.pill{display:inline-block;font-size:11px;font-weight:700;padding:2px 9px;border-radius:10px}.pw{background:#FDF1E4;color:var(--am)}.pb{background:#FDECEA;color:var(--rd)}.pg{background:#E3F2EA;color:var(--dg)}.pn{background:#EEF0F2;color:var(--mu)}
+.stepper{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin:12px 0 16px}.stepper div{border:1px solid #C8D0CC;background:#fff;text-align:center;padding:7px;color:var(--mu);cursor:default}
+.stepper .on{background:var(--g);border-color:var(--g);color:#fff;font-weight:700}.stepper .done{background:#E3F2EA;border-color:var(--g);color:var(--dg);cursor:pointer}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}.g73{display:grid;grid-template-columns:1fr 300px;gap:16px}
+.opt{border:1px solid #C8D0CC;padding:10px 12px;border-radius:3px;cursor:pointer;margin-bottom:8px;background:#fff}.opt.on{border-color:var(--g);background:#E3F2EA}.opt b{display:block}.opt small{color:var(--mu)}
+.srcs{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.drop{border:2px dashed #9DB8AA;background:#F6FAF8;padding:26px;text-align:center;color:var(--mu);border-radius:4px;cursor:pointer}
+.foot{display:flex;justify-content:flex-end;gap:10px;margin-top:16px}
+input[type=text],select{font:inherit;padding:5px 7px;border:1px solid #C8D0CC;border-radius:3px;width:100%;background:#fff}input.err{border-color:var(--rd);background:#FFF6F5}
+.hint{font-size:11px;color:var(--mu);font-weight:400;display:block}
+.kpis{display:grid;grid-template-columns:repeat(3,180px) 1fr;gap:12px;margin-bottom:14px}.kpi{background:#fff;border:1px solid var(--ln);padding:10px 14px}.kpi b{display:block;font-size:26px}
+tr.off td{color:#A0A8B0}tr.drag{opacity:.4}td.h{cursor:grab;color:#9AA3AD;width:22px}
+.toast{position:fixed;right:20px;bottom:20px;padding:12px 16px;border-radius:4px;color:#fff;max-width:420px;box-shadow:0 4px 14px rgba(0,0,0,.2);z-index:20}
+.banner{background:#E3F2EA;border:1px solid var(--g);padding:10px 14px;border-radius:4px;margin-bottom:12px;display:flex;justify-content:space-between;align-items:center}
+.sum div{display:flex;gap:14px;align-items:baseline;margin:10px 0}.sum b{font-size:22px;width:60px}
+.note{font-size:11px;color:var(--mu);font-style:italic;margin-top:14px}
+label.f{font-size:11px;font-weight:700;color:var(--mu);display:block;margin:10px 0 3px}
+.tc{background:#FFF7E6;color:var(--am);font-size:10px;font-weight:700;padding:1px 5px;border-radius:3px}
+</style></head><body>
+<header><span class="logo"><i></i></span><span class="app">TPRM Platform</span>
+<nav class="main"><span data-m="tracker" style="cursor:pointer">Tracker</span><span>Providers</span><span>Contracts</span><span>Invoices</span><span>TPRM</span><span>Risk360</span><span>APM</span><span data-m="admin" class="on" style="cursor:pointer">Administration</span></nav><span class="role">Functional admin</span></header>
+<div class="sub" id="sub"><a data-t="upload">Data upload</a><a data-t="ref">Referentials</a><a data-t="hist">Load history</a></div>
+<main id="app"></main>
+<script>
+const SAMPLE_FILE='tracker_export_MSList.xlsx';
+const FIELDS={Tracker:['Provider','Provider OSR ID','Service name','R360','Start date','End date','Notice period','Term type','Yearly costs','Contract manager','Beneficiary region','ROC region','Follow-up status','TPRM status','Comment'],
+ Providers:['Provider','Provider OSR ID','Country','Type'],Risk360:['R360','R360 status','Arrangement type'],TPRM:['TPRM IAF','TPRM status'],APM:['APP ID','Application name','DAP name','DAP ID','Max continuity level']};
+const TYPES={'Start date':'Date','End date':'Date','Yearly costs':'Number','Contract manager':'Person','Follow-up status':'List','TPRM status':'List','Term type':'List'};
+function trackerCols(){return [
+ ['Supplier','Aquila Systems · Norvex…','Provider'],['Supplier OSR ID','SUP00104512 · SUP00…','Provider OSR ID'],
+ ['Product / Service','Security operations · …','Service name'],['R360 ID','R360-00412 · (empty)','R360'],['Start Date','01/03/2024 · …','Start date'],['End Date','28/02/2027 · (empty)','End date'],
+ ['Notice','6 months · 3 months','Notice period'],['Contract_Manager','Claire Dubois · …','Contract manager'],['ROC','Paris · London','ROC region'],['V4G','Yes · No · (empty)',''],
+ ['Comments','Waiting for the signed amendment…','Comment'],['Item Type','Item · Item',null],['Path','/sites/tprm/…',null]
+].map(([f,s,fld])=>({file:f,sample:s,keep:fld!==null,name:fld===null?f:(fld||f),field:fld||'',type:fld?(TYPES[fld]||'Text'):'—'}))}
+function issues(){return [
+ {row:12,level:'B',col:'Provider OSR ID',txt:'SUP00999999 is not in the provider list',kind:'prov'},
+ {row:19,level:'B',col:'Provider OSR ID',txt:'SUP00888120 is not in the provider list',kind:'prov'},
+ {row:64,level:'B',col:'Provider OSR ID',txt:'SUP00777301 is not in the provider list',kind:'prov'},
+ {row:88,level:'B',col:'Provider OSR ID',txt:'Empty: the line has no provider',kind:'prov'},
+ {row:27,level:'B',col:'Product / Service',txt:'Same provider + service as row 26',kind:'dup'},
+ {row:71,level:'B',col:'Product / Service',txt:'Same provider + service as row 70',kind:'dup'},
+ ...[33,45,52,90,101].map(r=>({row:r,level:'W',col:'End date',txt:'Empty: loaded empty, shown "—" in the tracker',kind:'none'})),
+ ...[41,47,77,96].map(r=>({row:r,level:'W',col:'R360',txt:'Empty: the service has no arrangement yet',kind:'later'})),
+ ...[58,83].map(r=>({row:r,level:'W',col:'V4G scope',txt:'"Maybe" is not in the values (Yes · No)',kind:'list'}))
+].map(i=>Object.assign(i,{st:'open'}))}
+const TOTAL=118;
+let S={tab:'upload',view:'home',step:1,source:'Tracker',file:null,reuse:true,cols:[],newFields:[],idMode:'platform',combo:['Provider OSR ID','Service name'],keyCol:'',mode:'initial',iss:[],panel:null,
+ sources:[{n:'Tracker',w:'Initial tracker lines, loaded as they are',m:'One-time',last:'02/10/2026',rows:118,warn:7},{n:'Providers',w:'Provider list from OSR',m:'One-time',last:'15/06/2026',rows:412,warn:0},{n:'Risk360',w:'Arrangements (R360, status, type)',m:'Update by key',last:'03/11/2026',rows:96,warn:1},{n:'TPRM',w:'TPRM assessments (TPRM IAF)',m:'Update by key',last:'04/11/2026',rows:88,warn:0},{n:'APM',w:'Applications (APP ID, DAP, continuity)',m:'Update by key · versioned',last:'31/10/2026',rows:1240,warn:3}],
+ history:[{d:'04/11/2026 10:12',s:'TPRM',f:'tprm_export_nov.xlsx',by:'F. Admin',c:'88 updated · 0 excluded'},{d:'03/11/2026 16:40',s:'Risk360',f:'r360_extract.csv',by:'F. Admin',c:'96 updated · 1 warning'},{d:'02/10/2026 09:05',s:'Tracker',f:'tracker_v0.xlsx',by:'F. Admin',c:'118 created · 7 warnings'}]};
+let draft=null;try{draft=JSON.parse(localStorage.getItem('du_draft')||'null')}catch(e){}
+const $=s=>document.querySelector(s);const esc=t=>String(t).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function toast(t,c){const d=document.createElement('div');d.className='toast';d.style.background=c||'#1F3D2E';d.innerHTML=t;document.body.appendChild(d);setTimeout(()=>d.remove(),4200)}
+function saveDraft(silent){const d=JSON.parse(JSON.stringify(S));draft={step:S.step,source:S.source,data:d,at:new Date().toLocaleString('en-GB',{dateStyle:'short',timeStyle:'short'})};try{localStorage.setItem('du_draft',JSON.stringify(draft))}catch(e){};if(!silent)toast('Draft saved. You can come back to it from Data upload.')}
+function clearDraft(){draft=null;try{localStorage.removeItem('du_draft')}catch(e){}}
+function go(step){S.step=step;saveDraft(true);render();window.scrollTo(0,0)}
+function counts(){const b=S.iss.filter(i=>i.level==='B'&&i.st==='open').length,ex=S.iss.filter(i=>i.st==='excluded').length,w=S.iss.filter(i=>i.level==='W'&&i.st==='open').length;return {b,ex,w,ready:TOTAL-b-ex-w}}
+function fieldsFor(){return FIELDS[S.source].concat(S.newFields.map(f=>f.name))}
+function dupNames(){const m={};S.cols.filter(c=>c.keep).forEach(c=>{const k=c.name.trim().toLowerCase();m[k]=(m[k]||0)+1});return m}
+function STEPS(){return S.source==='Tracker'?['Source and file','Columns','Load']:['Source and file','Columns','Lines and links','Check','Load']}
+function stepper(){const t=STEPS();return `<div class="stepper" style="grid-template-columns:repeat(${t.length},1fr)">`+t.map((x,i)=>{const n=i+1,c=n===S.step?'on':(n<S.step?'done':'');return `<div class="${c}" ${n<S.step?`onclick="go(${n})"`:''}>${n<S.step?'✓ ':n+'  '}${x}</div>`}).join('')+'</div>'}
+function foot(next,label,dis){return `<div class="foot">${S.step>1?'<button class="btn" onclick="go(S.step-1)">Back</button>':''}<button class="btn" onclick="saveDraft()">Save draft</button><button class="btn" onclick="cancelUpload()">Cancel</button><button class="btn p" ${dis?'disabled':''} onclick="${next}">${label}</button></div>`}
+function cancelUpload(){S.view='home';render()}
+function startUpload(src){S.view='wizard';S.step=1;S.source=src||'Tracker';S.file=null;S.reuse=true;S.cols=[];S.newFields=[];S.iss=[];S.idMode=S.source==='Tracker'?'platform':'column';S.keyCol='';S.mode=S.source==='Tracker'?'initial':'key';S.panel=null;render()}
+function resumeDraft(){S=Object.assign(S,draft.data);S.view='wizard';S.tab='upload';render();toast('Draft resumed at step '+S.step+'. All your choices are kept.')}
+/* ---------- views ---------- */
+function home(){let h='<h1>Data upload</h1><p class="lead">Load a file from a source. Each source keeps its own column configuration for the next load.</p>';
+ if(draft)h+=`<div class="banner"><span><b>Draft in progress</b> · ${esc(draft.source)} · step ${draft.step} of 5 · saved ${esc(draft.at)}</span><span><button class="btn s" onclick="clearDraft();render()">Discard</button> <button class="btn p s" onclick="resumeDraft()">Resume</button></span></div>`;
+ h+='<div style="display:flex;justify-content:flex-end;margin:-46px 0 14px"><button class="btn p" onclick="startUpload()">+ New upload</button></div>';
+ h+='<div class="card"><table><tr><th>Source</th><th>What it loads</th><th>Mode</th><th>Last load</th><th>Rows</th><th>Warnings</th><th>Configuration</th><th></th></tr>'+S.sources.map(s=>`<tr><td><b>${s.n}</b></td><td>${s.w}</td><td>${s.m}</td><td>${s.last}</td><td>${s.rows.toLocaleString('fr-FR')}</td><td>${s.warn?`<span class="pill pw">${s.warn} warning${s.warn>1?'s':''}</span>`:'0'}</td><td style="color:var(--g)">Saved ✓</td><td><button class="btn s" onclick="startUpload('${s.n}')">Load</button></td></tr>`).join('')+'</table></div><p class="note">Fictitious data · prototype of the Data upload spec (03_Data_upload)</p>';return h}
+function step1(){const srcs=Object.keys(FIELDS);let h=stepper()+'<div class="grid2"><div class="card"><b>Source</b><div class="srcs" style="margin:10px 0 18px">'+srcs.map(s=>`<div class="opt ${s===S.source?'on':''}" onclick="S.source='${s}';S.cols=[];S.file=null;render()">${s===S.source?'◉':'○'} ${s}</div>`).join('')+'</div><b>File</b><div style="margin-top:8px">';
+ h+=S.file?`<div class="opt on"><b>${esc(S.file)}</b><small>${S.source==='Tracker'?'118 rows · 14 columns':'Fictitious sample'} · read with empty cells</small></div><label class="f">Sheet</label><select><option>Tracker</option><option>Sheet2</option></select><label class="f">Header row</label><select><option>1</option><option>2</option><option>3</option></select><div style="margin-top:10px"><button class="lnk" onclick="S.file=null;render()">Replace the file</button><button class="lnk" onclick="toast('<b>The file could not be read</b> (prototype: simulated error, e.g. protected or corrupted file).<br>Your source and settings are kept. Choose another file.','#B42318')">Simulate an unreadable file</button></div>`
+ :`<div class="drop" onclick="pickFile()">Drop an Excel (.xlsx) or CSV file here, or <u>browse</u><br><small>Prototype: click to use a fictitious sample file</small></div>`;
+ h+='</div></div><div class="card"><b>Saved configuration for '+S.source+'</b><ul style="padding-left:18px;color:var(--gr)"><li>Last used on 02/10/2026 by F. Admin</li><li>12 columns mapped · line ID generated by the platform</li><li>Columns found in this file: 13 of 14 known · 1 new column (V4G)</li></ul>';
+ h+=`<div class="opt ${S.reuse?'on':''}" onclick="S.reuse=true;render()">${S.reuse?'◉':'○'} <b style="display:inline">Reuse the saved configuration</b><small style="display:block">Known columns are pre-mapped. New columns are flagged.</small></div><div class="opt ${!S.reuse?'on':''}" onclick="S.reuse=false;render()">${!S.reuse?'◉':'○'} <b style="display:inline">Start from scratch</b></div><p style="color:var(--am);font-style:italic">Missing values are accepted: the file is always read, empty cells are reported at step 4.</p></div></div>`;
+ return h+foot('toCols()','Next: columns',!S.file)}
+function pickFile(){S.file=S.source==='Tracker'?SAMPLE_FILE:S.source.toLowerCase()+'_extract.xlsx';render()}
+function toCols(){if(!S.cols.length){S.cols=trackerCols();if(!S.reuse)S.cols.forEach(c=>{c.field='';c.name=c.file;c.type='—'})}go(2)}
+function step2(){const dn=dupNames(),fl=fieldsFor();let bad=false;
+ let rows=S.cols.map((c,i)=>{const dup=c.keep&&dn[c.name.trim().toLowerCase()]>1,empty=c.keep&&!c.name.trim();if(dup||empty||(c.keep&&!c.field&&S.source!=='Tracker'))bad=true;
+  const isNew=S.newFields.some(f=>f.name===c.field);
+  return `<tr draggable="true" data-i="${i}" class="${c.keep?'':'off'}"><td class="h" title="Drag to reorder">⋮⋮</td><td><b>${esc(c.file)}</b>${c.file==='V4G'?' <span class="pill pw">new column</span>':''}</td><td style="color:var(--mu)">${esc(c.sample)}</td>
+  <td><input type="checkbox" ${c.keep?'checked':''} onchange="S.cols[${i}].keep=this.checked;render()"></td>
+  <td>${c.keep?`<input type="text" class="${dup||empty?'err':''}" value="${esc(c.name)}" oninput="S.cols[${i}].name=this.value" onchange="render()">${dup?'<span style="color:var(--rd);font-size:11px">Name already used</span>':''}`:'—'}</td>
+  <td>${c.keep?`<select onchange="pickField(${i},this.value)" style="${!c.field&&S.source!=='Tracker'?'border-color:var(--am)':''}"><option value="">${S.source==='Tracker'?'Own column (Text)':'Choose…'}</option>${fl.map(f=>`<option ${f===c.field?'selected':''}>${esc(f)}</option>`).join('')}<option value="__new">+ New field</option></select>${isNew?'<span class="pill pg" style="margin-top:3px">new field</span>':''}`:'<span style="color:#A0A8B0">Not loaded</span>'}</td><td>${c.keep?(c.field?c.type:'Text'):'—'}</td></tr>`}).join('');
+ const kept=S.cols.filter(c=>c.keep).length;
+ let h=stepper()+`<div class="${S.panel?'g73':''}"><div class="card"><table id="ct"><tr><th></th><th>File column</th><th>Sample values</th><th>Keep</th><th>Name in the platform<span class="hint">label shown to users</span></th><th>Platform field<span class="hint">where the data goes</span></th><th>Type</th></tr>${rows}</table><p class="note">${S.cols.length} columns · ${kept} kept · drag ⋮⋮ to reorder: this is the order of the tracker columns</p></div>`;
+ if(S.panel){const p=S.panel;h+=`<div class="card" style="border-color:var(--g)"><b style="color:var(--g);font-size:14px">New field</b><p style="color:var(--mu);margin:4px 0">For column <b>${esc(S.cols[p.i].file)}</b>. Created when the load is confirmed.</p>
+  <label class="f">Name</label><input type="text" id="nf_n" value="${esc(p.name)}"><label class="f">Type</label><select id="nf_t" onchange="S.panel.type=this.value;S.panel.name=$('#nf_n').value;render()">${['Text','Number','Date','List','Person'].map(t=>`<option ${t===p.type?'selected':''}>${t}</option>`).join('')}</select>
+  ${p.type==='List'?'<label class="f">Values (separated by ·)</label><input type="text" id="nf_v" value="Yes · No">':''}
+  <label class="f">Shown in <span class="tc">TO CONFIRM</span></label><select><option>Tracker</option><option>Universe page</option><option>Provider page</option></select><label class="f">Edited by</label><select><option>GOC in the tracker</option><option>Read-only</option></select>
+  <div class="foot"><button class="btn" onclick="S.panel=null;render()">Cancel</button><button class="btn p" onclick="createField()">Create field</button></div></div>`}
+ h+='</div>';return h+foot('toLinks()','Next: lines and links',bad)+(bad?`<p style="text-align:right;color:var(--am);font-size:12px">${S.source==='Tracker'?'Every kept column needs a unique, non-empty name.':'Every kept column needs a unique name and a platform field.'}</p>`:'')}
+function pickField(i,v){if(v==='__new'){S.panel={i,name:S.cols[i].name+(S.cols[i].file==='V4G'?' scope':''),type:S.cols[i].file==='V4G'?'List':'Text'};render();return}S.cols[i].field=v;S.cols[i].type=TYPES[v]||(S.newFields.find(f=>f.name===v)||{}).type||'Text';render()}
+function createField(){const n=$('#nf_n').value.trim();if(!n){toast('Give the field a name.','#B42318');return}if(fieldsFor().some(f=>f.toLowerCase()===n.toLowerCase())){toast('A field with this name already exists.','#B42318');return}
+ S.newFields.push({name:n,type:S.panel.type});const c=S.cols[S.panel.i];c.field=n;c.type=S.panel.type;if(c.name===c.file)c.name=n;S.panel=null;render();toast('Field "'+esc(n)+'" ready. It will be created at the load.')}
+function toLinks(){if(!S.iss.length)S.iss=issues();go(3)}
+function step3(){const opts=[['platform','Generated by the platform','Recommended for the tracker: one Service ID per line'],['combo','Combination of columns','e.g. Provider OSR ID + Service name'],['column','One column of the file','For sources with their own key (Risk360, TPRM, APM, OSR)']];
+ const kept=S.cols.filter(c=>c.keep);
+ let h=stepper()+'<div class="grid2"><div class="card"><b style="font-size:14px">Line identifier</b><div style="margin-top:10px">'+opts.map(([k,t,d])=>`<div class="opt ${S.idMode===k?'on':''}" onclick="S.idMode='${k}';render()"><b>${S.idMode===k?'◉':'○'} ${t}</b><small>${d}</small></div>`).join('');
+ if(S.idMode==='combo')h+='<div style="padding:4px 2px">'+kept.map(c=>`<label style="display:inline-block;margin:3px 10px 3px 0"><input type="checkbox" ${S.combo.includes(c.field)?'checked':''} onchange="toggleCombo('${esc(c.field)}',this.checked)"> ${esc(c.name)}</label>`).join('')+'</div>';
+ if(S.idMode==='column')h+=`<select onchange="S.keyCol=this.value"><option value="">Choose the key column…</option>${kept.map(c=>`<option ${c.name===S.keyCol?'selected':''}>${esc(c.name)}</option>`).join('')}</select>`;
+ h+='</div><p class="note">For the tracker, duplicates are detected on Provider OSR ID + Service name (+ R360 when present) <span class="tc">TO CONFIRM</span></p></div>';
+ if(S.source==='Tracker'){const L=[['Provider','Provider OSR ID','Matched to the provider list','114 found · 4 not found','pw'],['Contractual universe','','Not linked at upload: the column is created empty and chosen later in the tracker','empty for 118 lines','pn'],['Service','Service name','One service per line, Service ID given by the platform','118 services','pg'],['Arrangement','R360','Matched to the Risk360 list. Can stay empty and be linked later on the universe page','114 found · 4 empty','pw']];
+  h+='<div class="card"><b style="font-size:14px">Links of each line</b><table style="margin-top:8px">'+L.map(([o,f,r,res,c])=>{const col=kept.find(x=>x.field===f);return `<tr><td style="width:130px"><b>${o}</b><span class="hint">${r}</span></td><td style="width:170px">${f?`<select>${kept.map(x=>`<option ${x===col?'selected':''}>column ${esc(x.name)}</option>`).join('')}</select>`:'<i style="color:var(--mu)">not linked at upload</i>'}</td><td><span class="pill ${c}">${res}</span></td></tr>`}).join('')+'</table><p class="note">The load never creates a contractual universe. See the Tracker tab after the load.</p></div>'}
+ else h+='<div class="card"><b>Links</b><p style="color:var(--mu)">Lines are matched by their key to existing records. No universe link for this source.</p></div>';
+ h+='</div>';const bad=(S.idMode==='combo'&&S.combo.length<2)||(S.idMode==='column'&&!S.keyCol);return h+foot('go(4)','Next: check',bad)}
+function toggleCombo(f,on){S.combo=on?[...S.combo,f]:S.combo.filter(x=>x!==f);render()}
+function step4(){const c=counts();let h=stepper()+`<div class="kpis"><div class="kpi">Ready<b style="color:var(--g)">${c.ready}</b></div><div class="kpi">With warnings<b style="color:var(--am)">${c.w}</b></div><div class="kpi">Blocking<b style="color:var(--rd)">${c.b}</b></div><div style="align-self:center;color:var(--gr)">Nothing is loaded yet. Warnings do not block the load. Blocking lines can be fixed here, excluded, or fixed in the file and uploaded again.${c.ex?` <b>${c.ex} excluded.</b>`:''}</div></div>`;
+ h+='<div class="card"><table><tr><th>Row</th><th>Level</th><th>Column</th><th>Issue</th><th>Action</th></tr>'+S.iss.map((i,k)=>{let a='';
+  if(i.st==='fixed')a='<span class="pill pg">Fixed</span> <button class="lnk" onclick="S.iss['+k+'].st=\'open\';render()">Undo</button>';
+  else if(i.st==='excluded')a='<span class="pill pn">Excluded</span> <button class="lnk" onclick="S.iss['+k+'].st=\'open\';render()">Undo</button>';
+  else if(i.kind==='prov')a=`<select style="width:150px" onchange="if(this.value){S.iss[${k}].st='fixed';render()}"><option value="">Pick a provider…</option><option>Aquila Systems</option><option>Norvex Data</option><option>Helion Cloud</option></select> <button class="lnk" onclick="declareProv(${k})">Declare provider</button><button class="lnk" onclick="S.iss[${k}].st='excluded';render()">Exclude line</button>`;
+  else if(i.kind==='dup')a=`<button class="lnk" onclick="S.iss[${k}].st='fixed';render()">Keep row ${i.row-1}</button><button class="lnk" onclick="S.iss[${k}].st='fixed';render()">Keep row ${i.row}</button><button class="lnk" onclick="S.iss[${k}].st='excluded';render()">Exclude line</button>`;
+  else if(i.kind==='list')a=`<button class="lnk" onclick="S.iss[${k}].st='fixed';render()">Add the value</button><button class="lnk" onclick="S.iss[${k}].st='fixed';render()">Load empty</button>`;
+  else if(i.kind==='later')a='<span style="color:var(--mu)">Link later on the universe page</span>';else a='<span style="color:var(--mu)">No action needed</span>';
+  return `<tr><td>${i.row}</td><td><span class="pill ${i.level==='B'?'pb':'pw'}">${i.level==='B'?'Blocking':'Warning'}</span></td><td>${i.col}</td><td>${i.txt}</td><td>${a}</td></tr>`}).join('')+'</table></div>';
+ h+=`<div class="foot" style="justify-content:space-between"><span><button class="btn" onclick="reupload()">Upload a corrected file</button> <button class="btn" onclick="toast('Report downloaded (prototype): one row per issue.')">Download the report</button></span><span style="display:flex;gap:10px"><button class="btn" onclick="go(3)">Back</button><button class="btn" onclick="saveDraft()">Save draft</button><button class="btn" onclick="cancelUpload()">Cancel</button><button class="btn p" onclick="go(5)">Next: load</button></span></div>`;return h}
+function declareProv(k){toast('The Declare provider flow opens (see Providers spec). On return, the line is ready.');S.iss[k].st='fixed';render()}
+function reupload(){toast('<b>The corrected file could not be read</b> (prototype: simulated error).<br>Your columns, links and decisions are kept. Try again or continue with the current file.','#B42318')}
+function step5(){const c=counts(),ex=c.ex+c.b,created=TOTAL-ex;let h=stepper()+'<div class="grid2"><div class="card sum"><b style="font-size:14px;width:auto">What will happen</b>'+
+ [[created,'tracker lines created (1 per service)','var(--g)'],[created,'lines with no contractual universe yet: chosen in the tracker',''],[0,'contractual universes created by the load',''],[ex,'lines excluded (blocking, not fixed)','var(--rd)'],[platCols(kept).length,'platform columns created empty: '+platCols(kept).join(', '),''],[S.newFields.length,'new field'+(S.newFields.length>1?'s':'')+' created'+(S.newFields.length?': '+S.newFields.map(f=>esc(f.name)).join(', '):''),'']].map(([v,t,col])=>`<div><b style="color:${col||'var(--gr)'}">${v}</b><span>${t}</span></div>`).join('')+'</div>';
+ h+=`<div class="card"><b style="font-size:14px">Mode</b><div style="margin-top:10px"><div class="opt ${S.mode==='initial'?'on':''}" onclick="S.mode='initial';render()"><b>${S.mode==='initial'?'◉':'○'} Initial load (one-time)</b></div><div class="opt ${S.mode==='key'?'on':''}" onclick="S.mode='key';render()"><b>${S.mode==='key'?'◉':'○'} Update by key</b><small>Update existing lines, add new ones, flag the lines missing from the file (never deleted)</small></div></div><p style="color:var(--g);font-weight:700">The column configuration is saved for the next ${S.source} load.</p><p style="color:var(--mu)">After the load: an entry in Load history with the file, author, counts and report. Cancel a load <span class="tc">TO CONFIRM</span></p></div></div>`;
+ return h+foot('doLoad('+created+','+ex+')','Load '+created+' lines',false)}
+function doLoad(n,ex){const now=new Date(),d=now.toLocaleDateString('fr-FR'),t=now.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});const w=counts().w;
+ S.history.unshift({d:d+' '+t,s:S.source,f:S.file,by:'F. Admin',c:n+' created · '+ex+' excluded · '+w+' warnings'+(S.newFields.length?' · '+S.newFields.length+' field created':'')});
+ const s=S.sources.find(x=>x.n===S.source);s.last=d;s.rows=n;s.warn=w;clearDraft();S.view='home';render();toast(n+' lines loaded into '+S.source+'. Configuration saved. Contractual universes are chosen in the Tracker tab.','#00915A')}
+function hist(){return '<h1>Load history</h1><p class="lead">Every load, dated and attributed.</p><div class="card"><table><tr><th>Date</th><th>Source</th><th>File</th><th>By</th><th>Result</th><th></th></tr>'+S.history.map(h=>`<tr><td>${h.d}</td><td><b>${h.s}</b></td><td>${esc(h.f)}</td><td>${h.by}</td><td>${h.c}</td><td><button class="lnk" onclick="toast('Report downloaded (prototype).')">Report</button></td></tr>`).join('')+'</table></div>'}
+
+
+const FAKE={'Supplier':['Aquila Systems','Aquila Systems','Norvex Data','Norvex Data','Norvex Data','Helion Cloud','Orbis Consulting','Orbis Consulting'],
+'Supplier OSR ID':['SUP00104512','SUP00104512','SUP00220871','SUP00220871','SUP00220871','SUP00330915','SUP00418820','SUP00418820'],
+'Product / Service':['Security operations','Identity management','Cloud hosting','Data platform','Support desk','Backup service','Advisory','Project delivery'],
+'R360 ID':['R360-00412','R360-00418','R360-00502','','R360-00511','R360-00611','','R360-00720'],
+'Start Date':['01/03/2024','01/03/2024','15/01/2025','15/01/2025','01/06/2023','01/09/2024','01/02/2025','01/02/2025'],
+'End Date':['28/02/2027','28/02/2027','14/01/2028','','31/05/2026','31/08/2027','31/01/2026',''],
+'Notice':['6 months','6 months','3 months','3 months','','12 months','1 month','1 month'],
+'Contract_Manager':['Claire Dubois','Claire Dubois','Marc Lefèvre','Marc Lefèvre','Sofia Benali','Julien Moreau','Anne Petit','Anne Petit'],
+'ROC':['Paris','Paris','London','London','London','Paris','Paris','Lisbon'],
+'V4G':['Yes','Yes','No','','No','Yes','',''],
+'Comments':['Waiting for the signed amendment','','','Scope to check with the GOC','','Renewal under review','',''],
+'Item Type':Array(8).fill('Item'),'Path':Array(8).fill('/sites/tprm/…')};
+const UNIV={'SUP00104512':['MSA-AQU-2024 · MSA'],'SUP00220871':['MSA-NOR-2025 · MSA','LSA-NOR-CLOUD · LSA'],'SUP00330915':[],'SUP00418820':['TC-ORB-2023 · Provider T&C']};
+const LU={},KEEP={};
+const UD={'MSA-NOR-2025 · MSA':{start:'15/01/2025',end:'14/01/2028',notice:'3 months',dora:'COMPLIANT',pc:'COMPLIANT'},
+'LSA-NOR-CLOUD · LSA':{start:'01/04/2025',end:'31/03/2027',notice:'6 months',dora:'VIGILANCE',pc:'COMPLIANT WITH RISK ACCEPTANCE'},
+'MSA-AQU-2024 · MSA':{start:'01/03/2024',end:'28/02/2027',notice:'6 months',dora:'',pc:''},
+'TC-ORB-2023 · Provider T&C':{start:'01/02/2023',end:'31/01/2026',notice:'1 month',dora:'NOT COMPLIANT',pc:'VIGILANCE'}};
+const UF={'Start date':'start','End date':'end','Notice period':'notice'};
+function deadline(end,notice){const m=/(\d+)\/(\d+)\/(\d+)/.exec(end||''),n=parseInt(notice);if(!m||!n)return '';const t=new Date(+m[3],+m[2]-1-n,1),last=new Date(t.getFullYear(),t.getMonth()+1,0).getDate(),d=new Date(t.getFullYear(),t.getMonth(),Math.min(+m[1],last));return String(d.getDate()).padStart(2,'0')+'/'+String(d.getMonth()+1).padStart(2,'0')+'/'+d.getFullYear()}
+const VC={'COMPLIANT':'pg','COMPLIANT WITH RISK ACCEPTANCE':'pg','VIGILANCE':'pw','NOT COMPLIANT':'pb','NOT APPLICABLE':'pn'};
+function pickU(r,v,p,osr){if(v==='__new'){const n='NEW-'+p.slice(0,3).toUpperCase()+'-'+((UNIV[osr]||[]).length+1)+' · created today';(UNIV[osr]=UNIV[osr]||[]).push(n);LU[r]=n;toast('Opens <b>Create universe</b> with the provider <b>'+esc(p)+'</b> pre-filled.<br><small>Prototype: the universe is created and selected on return (TO CONFIRM).</small>','#00915A')}else{LU[r]=v;if(v)toast('Universe set for line TRK-'+String(r+1).padStart(4,'0')+'. Dates, notice, notice deadline and verdicts are filled from the universe.')}render()}
+const PLAT=['Contractual universe','Notice deadline','DORA verdict','Permanent control verdict','TPRM IAF','Max continuity level'];
+function platCols(cols){const names=cols.map(c=>c.name.trim().toLowerCase());return PLAT.filter(n=>!names.includes(n.toLowerCase()))}
+const EMPTY={'R360 ID':4,'End Date':5,'V4G':9,'Comments':61,'Notice':12};
+function cellVals(c){return c.sample.split(' · ').map(v=>v==='(empty)'||v==='…'?'':v.replace('…',''))}
+function loadRaw(){const kept=S.cols.filter(c=>c.keep),drop=S.cols.filter(c=>!c.keep);
+ let h=stepper()+'<div class="grid2"><div class="card sum"><b style="font-size:14px;width:auto">What will be loaded</b>'+
+ [[TOTAL,'tracker lines, one line ID each, generated by the platform','var(--g)'],[kept.length,'columns kept, in the order you set',''],[drop.length,'columns left out: '+drop.map(c=>esc(c.file)).join(', '),''],[S.newFields.length,'new field'+(S.newFields.length>1?'s':'')+(S.newFields.length?': '+S.newFields.map(f=>esc(f.name)).join(', '):''),'']].map(([v,t,col])=>`<div><b style="color:${col||'var(--gr)'}">${v}</b><span>${t}</span></div>`).join('')+
+ '<p style="color:var(--mu)">Nothing is matched at this load: provider and R360 values are kept as text. Contractual universe is filled in a later phase; the computed and read columns fill in when their source or analysis exists.</p></div>';
+ h+='<div class="card"><b style="font-size:14px">For information · nothing blocks the load</b><table style="margin-top:8px"><tr><th>Column</th><th>Empty cells</th></tr>'+kept.filter(c=>EMPTY[c.file]).map(c=>`<tr><td>${esc(c.name)}</td><td><span class="pill pw">${EMPTY[c.file]} of ${TOTAL}</span></td></tr>`).join('')+
+ '</table><p style="margin-top:12px"><span class="pill pn">2 lines appear twice</span> rows 26 and 27, rows 70 and 71: both loaded <span class="tc">TO CONFIRM</span></p><p style="color:var(--g);font-weight:700">The column configuration is saved for the next Tracker load.</p></div></div>';
+ return h+`<div class="foot"><button class="btn" onclick="go(S.step-1)">Back</button><button class="btn" onclick="saveDraft()">Save draft</button><button class="btn" onclick="cancelUpload()">Cancel</button><button class="btn p" onclick="doLoadRaw()">Load ${TOTAL} lines</button></div>`}
+function doLoadRaw(){const now=new Date(),d=now.toLocaleDateString('fr-FR'),t=now.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});
+ S.loaded=JSON.parse(JSON.stringify(S.cols.filter(c=>c.keep)));
+ S.history.unshift({d:d+' '+t,s:'Tracker',f:S.file,by:'F. Admin',c:TOTAL+' lines loaded as they are · '+S.loaded.length+' columns'+(S.newFields.length?' · '+S.newFields.length+' field created':'')});
+ const s=S.sources.find(x=>x.n==='Tracker');s.last=d;s.rows=TOTAL;s.warn=0;clearDraft();S.view='home';S.tab='tracker';render();toast(TOTAL+' lines loaded into the tracker. Configuration saved.','#00915A')}
+function trackerView(){if(!S.loaded)return '<h1>Tracker</h1><div class="card" style="text-align:center;color:var(--mu);padding:40px">The tracker is empty.<br>The functional admin loads it from Administration › Data upload.</div>';
+ const pc=platCols(S.loaded);let order=S.loaded.map(c=>({n:c.name,c}));const P=n=>({n,plat:true});
+ if(pc.includes('Contractual universe')){const k=order.findIndex(o=>o.c&&o.c.field==='Provider OSR ID');order.splice(k>=0?k+1:1,0,P('Contractual universe'))}
+ pc.filter(n=>n!=='Contractual universe').forEach(n=>order.push(P(n)));
+ let rows='';for(let r=0;r<8;r++)rows+='<tr><td style="color:var(--mu)">TRK-'+String(r+1).padStart(4,'0')+'</td>'+order.map(o=>{if(o.n==='Contractual universe'&&o.plat){const osr=FAKE['Supplier OSR ID'][r],p=FAKE['Supplier'][r],us=UNIV[osr]||[];return `<td style="background:#F6FAF8"><select style="width:210px;${LU[r]?'border-color:var(--g)':''}" onchange="pickU(${r},this.value,'${esc(p)}','${osr}')"><option value="">${us.length?'Choose…':'No universe yet'}</option>${us.length?`<optgroup label="Universes of ${esc(p)}">${us.map(u=>`<option ${u===LU[r]?'selected':''}>${esc(u)}</option>`).join('')}</optgroup>`:''}<option value="__new">+ Create a universe for ${esc(p)}</option></select></td>`}const u=LU[r]?(UD[LU[r]]||{}):null,shown=k=>{const c=S.loaded.find(c=>c.field===k);if(!c)return u&&u[UF[k]]||'';const fx=(FAKE[c.file]||[])[r%8]||'';return u&&u[UF[k]]&&!KEEP[r+k]?u[UF[k]]:fx};
+ if(o.plat){let v='';if(u){if(o.n==='Notice deadline')v=deadline(shown('End date'),shown('Notice period'));if(o.n==='DORA verdict')v=u.dora;if(o.n==='Permanent control verdict')v=u.pc}
+  if(!v)return `<td style="background:#F6FAF8"><span style="color:#A0A8B0">${u&&/verdict/.test(o.n)?'Not analysed yet':'—'}</span></td>`;
+  return `<td style="background:#EAF6EF" title="From the contractual universe">${/verdict/.test(o.n)?`<span class="pill ${VC[v]||'pn'}">${v}</span>`:'<b style="color:var(--dg)">'+v+'</b>'}</td>`}
+ const x=(FAKE[o.c.file]||cellVals(o.c))[r%8]||'',k=o.c.field;
+ if(u&&UF[k]&&u[UF[k]]){const uv=u[UF[k]];if(KEEP[r+k])return `<td>${esc(x)}<span class="hint">file value kept · <button class="lnk" style="font-size:11px" onclick="delete KEEP['${r+k}'];render()">use universe</button></span></td>`;
+  return `<td style="background:#EAF6EF" title="From the contractual universe"><b style="color:var(--dg)">${uv}</b>${x&&x!==uv?`<span class="hint" style="color:var(--am)">file: ${esc(x)} · <button class="lnk" style="font-size:11px;color:var(--am)" onclick="KEEP['${r+k}']=1;render()">keep file</button></span>`:''}</td>`}
+ return `<td>${x?esc(x):'<span style="color:#A0A8B0">—</span>'}</td>`}).join('')+'</tr>';
+ return `<h1>Tracker</h1><p class="lead">${TOTAL} lines · loaded as they are, with your column names and order. <span style="background:#E3F2EA;padding:1px 6px;border-radius:3px;color:var(--dg)">Platform columns</span> exist even when the file has no such column, and start empty.</p><div class="card" style="overflow-x:auto"><table><tr><th>Line ID</th>${order.map(o=>`<th style="white-space:nowrap;${o.plat?'background:#DCEEE4':''}">${esc(o.n)}${o.plat?`<span class="hint">${o.n==='Contractual universe'?'platform · pick among the provider\'s universes':'platform · empty'}</span>`:''}</th>`).join('')}</tr>${rows}</table><p class="note">First 8 of ${TOTAL} lines · fictitious data · Contractual universe: only the universes of the line's provider (matched on Provider OSR ID), nothing pre-selected · <b style="color:var(--dg)">bold on green</b>: filled from the selected universe; when the file had another value, it is shown with "keep file" <span class="tc">TO CONFIRM</span> · Notice deadline and verdicts: computed · TPRM IAF and Max continuity level: read from TPRM and APM</p></div>`}
+function render(){const tr=S.tab==='tracker';$('#sub').style.display=tr?'none':'flex';document.querySelectorAll('nav.main span[data-m]').forEach(x=>x.classList.toggle('on',(x.dataset.m==='tracker')===tr));document.querySelectorAll('.sub a').forEach(a=>a.classList.toggle('on',a.dataset.t===S.tab));let h;
+ if(S.tab==='tracker')h=trackerView();else if(S.tab==='hist')h=hist();else if(S.tab==='ref')h='<h1>Referentials</h1><p class="lead">DORA and permanent control referentials. Out of scope of this prototype.</p>';
+ else if(S.view==='home')h=home();else{const V={'Source and file':step1,'Columns':step2,'Lines and links':step3,'Check':step4,'Load':()=>S.source==='Tracker'?loadRaw():step5()};h=`<h1>New upload · ${S.source}</h1><p class="lead">Step ${S.step} of ${STEPS().length}${S.source==='Tracker'?' · first load: the file is loaded as it is, without linking':''}</p>`+V[STEPS()[S.step-1]]()}
+ $('#app').innerHTML=h;document.querySelector('.role').textContent=tr?'GOC':'Functional admin';if(S.tab==='upload'&&S.view==='wizard'&&S.step===2)bindDrag()}
+function bindDrag(){let from=null;document.querySelectorAll('#ct tr[draggable]').forEach(r=>{r.addEventListener('dragstart',e=>{from=+r.dataset.i;r.classList.add('drag')});r.addEventListener('dragend',()=>r.classList.remove('drag'));r.addEventListener('dragover',e=>e.preventDefault());r.addEventListener('drop',e=>{e.preventDefault();const to=+r.dataset.i;if(from===null||from===to)return;const [m]=S.cols.splice(from,1);S.cols.splice(to,0,m);render()})})}
+document.querySelectorAll('nav.main span[data-m]').forEach(x=>x.onclick=()=>{S.tab=x.dataset.m==='tracker'?'tracker':'upload';render()});
+document.querySelectorAll('.sub a').forEach(a=>a.onclick=()=>{S.tab=a.dataset.t;render()});
+render();
+</script></body></html>
